@@ -5,9 +5,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.js",
-    "ci:lint": "prettier --check src",
-    "typecheck": "tsc --noEmit",
-    "teste:ci": "echo \"Running tests...\""
+  "ci:lint": "prettier --check src",
+  "typecheck": "tsc --noEmit",
+  "build": "tsc",
+  "teste:ci": "echo \"Running tests...\""
   },
   "repository": {
     "type": "git",
