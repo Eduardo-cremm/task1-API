@@ -1,0 +1,18 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - yarn install --frozen-lockfile
+  pre_build:
+    commands:
+      - yarn ci:lint
+      - yarn typecheck
+  build:
+    commands:
+      - yarn build
+    
+  post_build:
+    commands:
