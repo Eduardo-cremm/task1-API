@@ -15,6 +15,5 @@ phases:
     
   post_build:
     commands:
-      - aws s3 sync --delete ./dist s3://Task1-API
+      - aws s3 sync --delete ./dist s3://task1-api
       - aws cloudfront create-invalidation --distribution-id E2HEJI1TEBC93P --paths /index.js
-      
