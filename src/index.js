@@ -1,49 +1,50 @@
-const http = require('http');
-const { URL } = require('url');
+const http = require("http");
+const { URL } = require("url");
 
-const bodyParser = require('./helpers/bodyParser');
-const routes = require('./routes');
+const bodyParser = require("./helpers/bodyParser");
+const routes = require("./routes");
 
 const server = http.createServer((request, response) => {
-    const parsedUrl = new URL(`http://localhost:3000${request.url}`);
-    console.log(`Request method: ${request.method} | Endpoint: ${parsedUrl.pathname}`);
+  const parsedUrl = new URL(`http://localhost:3000${request.url}`);
+  console.log(
+    `Request method: ${request.method} | Endpoint: ${parsedUrl.pathname}`,
+  );
 
-    let {pathname} = parsedUrl;
-    let id = null;
+  let { pathname } = parsedUrl;
+  let id = null;
 
-    const splitEndpoint = pathname.split('/').filter(Boolean);
+  const splitEndpoint = pathname.split("/").filter(Boolean);
 
-    if (splitEndpoint.length > 1) {
-        pathname = `/${splitEndpoint[0]}/:id`;
-        id = splitEndpoint[1];
-    }
+  if (splitEndpoint.length > 1) {
+    pathname = `/${splitEndpoint[0]}/:id`;
+    id = splitEndpoint[1];
+  }
 
-    const route = routes.find((routeObj) => (
-        routeObj.endpoint === pathname && routeObj.method === request.method
-    ));
+  const route = routes.find(
+    (routeObj) =>
+      routeObj.endpoint === pathname && routeObj.method === request.method,
+  );
 
-    if (route) {
-        request.query = Object.fromEntries(parsedUrl.searchParams.entries());
-        request.params = { id }; 
+  if (route) {
+    request.query = Object.fromEntries(parsedUrl.searchParams.entries());
+    request.params = { id };
 
-        response.send = (statusCode, body) => {
-            response.writeHead(statusCode, { 'Content-Type': 'application/json' });
-            response.end(JSON.stringify(body));
-        };
+    response.send = (statusCode, body) => {
+      response.writeHead(statusCode, { "Content-Type": "application/json" });
+      response.end(JSON.stringify(body));
+    };
 
-    if (['POST', 'PUT', 'PATCH'].includes (request.method)) {
-        bodyParser(request, () => route.handler(request, response));
+    if (["POST", "PUT", "PATCH"].includes(request.method)) {
+      bodyParser(request, () => route.handler(request, response));
     } else {
-        route.handler(request, response);
+      route.handler(request, response);
     }
-
-} else {
-        response.writeHead(404, { 'Content-Type': 'text/html' });
-        response.end(`Cannot ${request.method} ${parsedUrl.pathname}`)
-    }
-    
+  } else {
+    response.writeHead(404, { "Content-Type": "text/html" });
+    response.end(`Cannot ${request.method} ${parsedUrl.pathname}`);
+  }
 });
 
-server.listen(3000, () => 
-    console.log('Server is running at http://localhost:3000'));
-
+server.listen(3000, () =>
+  console.log("Server is running at http://localhost:3000"),
+);
